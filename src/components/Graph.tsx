@@ -110,9 +110,9 @@ export function Graph() {
                         },
                     ]}
                     layout={{
-                        title: `y = ${equation}`,
-                        xaxis: { title: "x" },
-                        yaxis: { title: "y" },
+                        title: { text: `${equation}` },
+                        xaxis: { title: { text: "x" } },
+                        yaxis: { title: { text: "y" } },
                         autosize: true,
                     }}
                     style={{ width: "100%", height: "100%" }}
