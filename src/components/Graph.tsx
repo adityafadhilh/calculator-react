@@ -26,6 +26,9 @@ export function Graph() {
             <div className="bg-blue-600 w-full mt-4 text-white p-2 font-bold text-center rounded-2xl">
                 Generate Graph
             </div>
+            <div className="border-2 border-gray-400 min-h-96 mt-4 rounded-2xl resize-y">
+                
+            </div>
         </div>
     )
 }
