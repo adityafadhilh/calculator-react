@@ -1,6 +1,6 @@
 export function Graph() {
     return (
-        <div className="border-2 border-gray-400 w-full h-fit rounded-2xl p-4 mt-10">
+        <div className="shadow-gray-400 shadow-2xl inset-shadow-2xs w-full h-fit rounded-2xl p-4 mt-10">
             <h3 className="text-xl font-bold mb-4">Graph Visualizer</h3>
             <p className="block mb-2">{'Equation (use "x" as variable):'}</p>
             <input className="border-2 border-gray-400 rounded-md w-full p-2"></input>

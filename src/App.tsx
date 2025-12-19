@@ -4,6 +4,7 @@ import { useState } from 'react'
 import './App.css'
 import { Calculator } from './components/Calculator';
 import { Graph } from './components/Graph';
+import { Speech } from './components/Speech';
 
 function App() {
   const [isActiveTab, setIsActiveTab] = useState<'Calculator' | 'Graph' | 'Speech'>('Calculator');
@@ -38,7 +39,7 @@ function App() {
         <div className='w-1/2 2xl:w-1/4 sm:w-2xl h-fit'>
           {isActiveTab == 'Calculator' && <Calculator />}
           {isActiveTab == 'Graph' && <Graph />}
-          {isActiveTab == 'Speech' && <></>}
+          {isActiveTab == 'Speech' && <Speech />}
         </div>
       </div>
     </>

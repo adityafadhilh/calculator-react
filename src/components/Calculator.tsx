@@ -88,7 +88,7 @@ export function Calculator() {
     }
 
     return (
-        <div className="border-gray-400 rounded-2xl w-full mt-10 border-2 p-10">
+        <div className="rounded-2xl w-full mt-10 p-10 shadow-gray-400 shadow-2xl inset-shadow-2xs">
             <div className="w-full text-right color-black rounded-2xl border-gray-400 text-3xl border-2 p-4">
                 {display}
             </div>
