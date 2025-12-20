@@ -38,10 +38,16 @@ function App() {
       <div className='flex w-full justify-center'>
         <div className='w-1/2 2xl:w-1/4 sm:w-2xl h-fit'>
           {isActiveTab == 'Calculator' && <Calculator />}
-          {isActiveTab == 'Graph' && <Graph />}
           {isActiveTab == 'Speech' && <Speech />}
         </div>
       </div>
+
+      {isActiveTab == 'Graph' &&
+        <div className='h-screen'>
+          <Graph />
+        </div>
+      }
+
     </>
 
   )
