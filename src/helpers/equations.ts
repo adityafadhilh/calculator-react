@@ -15,13 +15,13 @@ export interface EquationDefinition {
 export const EQUATIONS: Record<EquationType, EquationDefinition> = {
   quadratic: {
     label: "Quadratic",
-    expression: "x^2 - 4",
+    expression: "x^2",
     description: "ax² + bx + c",
   },
 
   cubic: {
     label: "Cubic",
-    expression: "x^3 - 1",
+    expression: "x^3",
     description: "ax³ + bx² + cx + d",
   },
 
