@@ -5,9 +5,9 @@ import './App.css'
 import { Calculator } from './components/Calculator';
 import { Graph } from './components/Graph';
 import { Speech } from './components/Speech';
-import CalculatorIcon from './assets/CalculatorIcon';
-import GraphIcon from './assets/GraphIcon';
-import MicIcon from './assets/MicIcon';
+import CalculatorIcon from './assets/icons/CalculatorIcon';
+import GraphIcon from './assets/icons/GraphIcon';
+import MicIcon from './assets/icons/MicIcon';
 
 type TabId = 'Calculator' | 'Graph' | 'Speech';
 
@@ -54,7 +54,7 @@ function App() {
         <div className='flex space-x-4'>
           {tabs.map((tab) => {
             return (
-              <div onClick={() => setIsActiveTab(tab.id)} className={`flex items-center justify-center w-fit md:w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == tab.id ?
+              <div key={tab.id} onClick={() => setIsActiveTab(tab.id)} className={`flex items-center justify-center w-fit md:w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == tab.id ?
                 'text-white bg-blue-600' :
                 'text-black bg-white border-2 border-gray-400'
                 } `}>

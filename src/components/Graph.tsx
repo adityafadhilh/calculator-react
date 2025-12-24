@@ -2,8 +2,8 @@ import Plot from 'react-plotly.js';
 import { compile } from 'mathjs';
 import { useEffect, useMemo, useState } from 'react';
 import { EQUATIONS } from '../helpers/equations';
-import ChevronDownIcon from '../assets/ChevronDownIcon';
-import ChevronUpIcon from '../assets/ChevronUpIcon';
+import ChevronDownIcon from '../assets/icons/ChevronDownIcon';
+import ChevronUpIcon from '../assets/icons/ChevronUpIcon';
 
 type XRangeType = {
     min: number,
