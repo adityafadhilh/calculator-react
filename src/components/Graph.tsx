@@ -51,7 +51,7 @@ export function Graph() {
 
     const _equationsPreset = () => {
         return (
-            <div className="flex md:space-x-3 sm:space-y-3 sm:space-x-0 pt-2 sm:flex-col md:flex-row">
+            <div className="flex flex-col space-y-3 w-full pt-2 md:flex-row md:space-x-2">
                 {Object.entries(EQUATIONS).map(([_, eq]) => {
                     return (
                         <div
@@ -75,7 +75,7 @@ export function Graph() {
     }
 
     return (
-        <div className='lg:flex lg:flex-row md:flex md:flex-col sm:flex sm:flex-col w-full h-full mt-10 px-10 pb-10 space-x-10 md:space-y-10 sm:space-y-10'>
+        <div className='flex flex-col md:flex-row w-full h-fit md:h-full mt-10 px-10 pb-10 md:space-x-10 space-y-10'>
             <div className="shadow-gray-400 shadow-2xl inset-shadow-2xs rounded-2xl p-4 flex-1 w-full h-full">
                 <h3 className="text-xl font-bold my-2">Graph Visualizer</h3>
                 <p className="block mb-2">{'Equation (use "x" as variable):'}</p>

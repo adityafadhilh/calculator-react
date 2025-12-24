@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,6 +8,14 @@ import { Speech } from './components/Speech';
 
 function App() {
   const [isActiveTab, setIsActiveTab] = useState<'Calculator' | 'Graph' | 'Speech'>('Calculator');
+
+  useEffect(() => {
+    document.body.style.zoom = "80%";
+
+    return () => {
+      document.body.style.zoom = "100%";
+    };
+  }, []);
 
   return (
     <>
@@ -36,7 +44,7 @@ function App() {
         </div>
       </div>
       <div className='flex w-full justify-center'>
-        <div className='w-1/2 2xl:w-1/4 sm:w-2xl h-fit'>
+        <div className='md:w-1/2 2xl:w-1/4 h-fit'>
           {isActiveTab == 'Calculator' && <Calculator />}
           {isActiveTab == 'Speech' && <Speech />}
         </div>
