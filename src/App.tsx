@@ -5,6 +5,9 @@ import './App.css'
 import { Calculator } from './components/Calculator';
 import { Graph } from './components/Graph';
 import { Speech } from './components/Speech';
+import CalculatorIcon from './assets/CalculatorIcon';
+import GraphIcon from './assets/GraphIcon';
+import MicIcon from './assets/MicIcon';
 
 function App() {
   const [isActiveTab, setIsActiveTab] = useState<'Calculator' | 'Graph' | 'Speech'>('Calculator');
@@ -23,23 +26,26 @@ function App() {
         <h1 className='text-5xl font-bold'>Calculator</h1>
         <p className='mt-4 mb-8'>Calculate, Visualize, and Speak Your Math</p>
         <div className='flex space-x-4'>
-          <div onClick={() => setIsActiveTab('Calculator')} className={`w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Calculator' ?
+          <div onClick={() => setIsActiveTab('Calculator')} className={`flex items-center justify-center w-fit md:w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Calculator' ?
             'text-white bg-blue-600' :
             'text-black bg-white border-2 border-gray-400'
             } `}>
-            Calculator
+            <CalculatorIcon className="h-8" color={isActiveTab == 'Calculator' ? '#fff' : '#000'} />
+            <p className='hidden md:inline'>Calculator</p>
           </div>
-          <div onClick={() => setIsActiveTab('Graph')} className={`w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Graph' ?
+          <div onClick={() => setIsActiveTab('Graph')} className={`flex items-center justify-center w-fit md:w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Graph' ?
             'text-white bg-blue-600' :
             'text-black bg-white border-2 border-gray-400'
             }`}>
-            <p>Graph Visualizer</p>
+            <GraphIcon className="h-8" color={isActiveTab == 'Graph' ? '#fff' : '#000'} />
+            <p className='hidden md:inline'>Graph Visualizer</p>
           </div>
-          <div onClick={() => setIsActiveTab('Speech')} className={`w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Speech' ?
+          <div onClick={() => setIsActiveTab('Speech')} className={`flex items-center justify-center w-fit md:w-48 p-2 text-center rounded-2xl font-bold cursor-pointer ${isActiveTab == 'Speech' ?
             'text-white bg-blue-600' :
             'text-black bg-white border-2 border-gray-400'
             }`}>
-            <p>Speech Calculator</p>
+            <MicIcon className="h-8" color={isActiveTab == 'Speech' ? '#fff' : '#000'} />
+            <p className='hidden md:inline'>Speech Calculator</p>
           </div>
         </div>
       </div>
