@@ -48,6 +48,8 @@ export function Graph() {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
                 setShowPreset(true);
+            } else {
+                setShowPreset(false);
             }
         };
         handleResize();
