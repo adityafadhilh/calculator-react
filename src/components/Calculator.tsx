@@ -14,7 +14,7 @@ export function Calculator() {
         ['4', '5', '6', '*'],
         ['1', '2', '3', '-'],
         ['0', '.', '=', '+'],
-        // ['+/-', '()', '%']
+        // ['+/-', '(', ')', '%']
     ];
 
     // const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;

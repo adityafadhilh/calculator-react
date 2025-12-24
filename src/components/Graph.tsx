@@ -2,6 +2,8 @@ import Plot from 'react-plotly.js';
 import { compile } from 'mathjs';
 import { useEffect, useMemo, useState } from 'react';
 import { EQUATIONS } from '../helpers/equations';
+import ChevronDownIcon from '../assets/ChevronDownIcon';
+import ChevronUpIcon from '../assets/ChevronUpIcon';
 
 type XRangeType = {
     min: number,
@@ -18,6 +20,7 @@ export function Graph() {
     const [x, setX] = useState<any>([]);
     const [y, setY] = useState<any>([]);
     const [activeMode, setActiveMode] = useState<'lines' | 'markers'>('lines');
+    const [showPreset, setShowPreset] = useState<boolean>(true);
 
     const generatePlot = () => {
         try {
@@ -42,6 +45,17 @@ export function Graph() {
     };
 
     useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768) {
+                setShowPreset(true);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
         generatePlot();
     }, [equation, range, activeMode])
 
@@ -52,7 +66,10 @@ export function Graph() {
     const _equationsPreset = () => {
         return (
             <div className="flex flex-col space-y-3 w-full pt-2 md:flex-row md:space-x-2">
-                {Object.entries(EQUATIONS).map(([_, eq]) => {
+                <div className='flex justify-center md:hidden' onClick={() => setShowPreset(!showPreset)}>
+                    {showPreset ? <ChevronUpIcon className='h-4' /> : <ChevronDownIcon className='h-4' />}
+                </div>
+                {showPreset && Object.entries(EQUATIONS).map(([_, eq]) => {
                     return (
                         <div
                             className="bg-gray-200 rounded-xl px-4 py-2 text-md h-10 hover:bg-gray-500 hover:text-white hover:cursor-pointer"
@@ -146,6 +163,7 @@ export function Graph() {
                             type: "scatter",
                             mode: activeMode,
                             name: `y = ${equation}`,
+                            line: { shape: 'spline' },
                         },
                     ]}
                     layout={{
