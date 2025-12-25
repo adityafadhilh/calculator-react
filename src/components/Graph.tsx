@@ -11,38 +11,37 @@ type XRangeType = {
 }
 
 export function Graph() {
-    const [equation, setEquation] = useState('');
+    const [equation, setEquation] = useState('x^2');
     const [range, setRange] = useState<XRangeType>({
         min: -10,
         max: 10
     });
-    const [error, setError] = useState<boolean>(false);
-    const [x, setX] = useState<any>([]);
-    const [y, setY] = useState<any>([]);
     const [activeMode, setActiveMode] = useState<'lines' | 'markers'>('lines');
     const [showPreset, setShowPreset] = useState<boolean>(true);
 
-    const generatePlot = () => {
+    const plotData = useMemo(() => {
         try {
             const expression = compile(equation);
+            const x: number[] = [];
+            const y: number[] = [];
 
-            console.log(expression);
-
-            const x = [];
-            const y = [];
-
-            for (let i = range.min; i <= range.max; i++) {
+            // Increase resolution for smoother lines
+            const step = (range.max - range.min) / 100;
+            for (let i = range.min; i <= range.max; i += Math.max(0.1, step)) {
                 x.push(i);
-                y.push(expression.evaluate({ x: i }));
-            };
+                try {
+                    const result = expression.evaluate({ x: i });
+                    y.push(typeof result === 'number' ? result : NaN);
+                } catch {
+                    y.push(NaN);
+                }
+            }
 
-            setX(x);
-            setY(y);
-            setError(false);
+            return { x, y, error: false };
         } catch (error) {
-            setError(true);
+            return { x: [], y: [], error: true };
         }
-    };
+    }, [equation, range]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -57,128 +56,112 @@ export function Graph() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    useEffect(() => {
-        generatePlot();
-    }, [equation, range, activeMode])
-
-    // useEffect(() => {
-    //     generatePlot();
-    // }, [range])
-
     const _equationsPreset = () => {
         return (
-            <div className="flex flex-col space-y-3 w-full pt-2 md:flex-row md:space-x-2">
-                <div className='flex justify-center md:hidden' onClick={() => setShowPreset(!showPreset)}>
+            <div className="flex flex-wrap gap-2 pt-2">
+                <div className='flex justify-center w-full md:hidden' onClick={() => setShowPreset(!showPreset)}>
                     {showPreset ? <ChevronUpIcon className='h-4' /> : <ChevronDownIcon className='h-4' />}
                 </div>
-                {showPreset && Object.entries(EQUATIONS).map(([_, eq]) => {
-                    return (
-                        <div
-                            className="bg-gray-200 rounded-xl px-4 py-2 text-md h-10 hover:bg-gray-500 hover:text-white hover:cursor-pointer"
-                            onClick={() => {
-                                setEquation(eq.expression);
-                            }}
-                        >
-                            {eq.label}
-                        </div>
-                    )
-                })}
-                {/* <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Quadratic</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Cubic</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Sine</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Cosine</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Exponential</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Logarithm</div> */}
+                {showPreset && Object.entries(EQUATIONS).map(([key, eq]) => (
+                    <button
+                        key={key}
+                        className="bg-gray-200 rounded-xl px-4 py-2 text-sm hover:bg-blue-600 hover:text-white transition-colors cursor-pointer"
+                        onClick={() => setEquation(eq.expression)}
+                    >
+                        {eq.label}
+                    </button>
+                ))}
             </div>
         )
     }
 
     return (
-        <div className='flex flex-col md:flex-row w-full h-fit md:h-full mt-10 px-10 pb-10 md:space-x-10 space-y-10'>
-            <div className="shadow-gray-400 shadow-2xl inset-shadow-2xs rounded-2xl p-4 flex-1 w-full h-full">
-                <h3 className="text-xl font-bold my-2">Graph Visualizer</h3>
-                <p className="block mb-2">{'Equation (use "x" as variable):'}</p>
-                <input
-                    className="border-2 border-gray-400 rounded-md w-full p-2"
-                    onChange={(e) => {
-                        setEquation(e.target.value);
-                    }}
-                    value={equation}
-                />
-                {error && <span className='text-red-500'>Please input valid equation</span>}
-                <div className="flex space-x-4 mt-4">
-                    <div className="flex-1">
-                        <p className="mb-2">{'Min X:'}</p>
+        <div className='flex flex-col md:flex-row w-full h-fit md:h-[calc(100vh-200px)] mt-10 px-4 md:px-10 pb-10 gap-8'>
+            <div className="shadow-2xl rounded-2xl p-6 flex-1 w-full bg-white overflow-y-auto">
+                <h3 className="text-2xl font-bold mb-6">Graph Visualizer</h3>
+
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Equation (use "x" as variable)
+                    </label>
+                    <input
+                        className={`border-2 rounded-xl w-full p-3 font-mono text-lg focus:outline-hidden focus:ring-2 ${plotData.error ? 'border-red-400 focus:ring-red-200' : 'border-gray-200 focus:ring-blue-200'
+                            }`}
+                        onChange={(e) => setEquation(e.target.value)}
+                        value={equation}
+                        placeholder="e.g. x^2 + 2x + 1"
+                    />
+                    {plotData.error && <p className='text-red-500 text-sm mt-2'>Please input a valid equation</p>}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Min X</label>
                         <input
                             type='number'
-                            onChange={(e) => {
-                                setRange({
-                                    ...range,
-                                    min: parseInt(e.target.value)
-                                });
-                            }}
-                            value={range.min || ''}
-                            className="border-2 border-gray-400 rounded-md w-full p-2" />
+                            onChange={(e) => setRange(prev => ({ ...prev, min: parseFloat(e.target.value) || 0 }))}
+                            value={range.min}
+                            className="border-2 border-gray-200 rounded-xl w-full p-3 focus:outline-hidden focus:ring-2 focus:ring-blue-200"
+                        />
                     </div>
-                    <div className="flex-1">
-                        <p className="mb-2">{'Max X:'}</p>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Max X</label>
                         <input
                             type='number'
-                            onChange={(e) => {
-                                setRange({
-                                    ...range,
-                                    max: parseInt(e.target.value)
-                                });
-                            }}
-                            value={range.max || ''}
-                            className="border-2 border-gray-400 rounded-md w-full p-2" />
+                            onChange={(e) => setRange(prev => ({ ...prev, max: parseFloat(e.target.value) || 0 }))}
+                            value={range.max}
+                            className="border-2 border-gray-200 rounded-xl w-full p-3 focus:outline-hidden focus:ring-2 focus:ring-blue-200"
+                        />
                     </div>
                 </div>
-                <p className="my-2">{'Preset Equations:'}</p>
-                {/* <div className="flex space-x-3 pt-2">
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Quadratic</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Cubic</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Sine</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Cosine</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Exponential</div>
-                <div className="bg-gray-200 rounded-xl px-4 py-2 text-md">Logarithm</div>
-            </div> */}
-                {_equationsPreset()}
-                {/* <div className="bg-blue-600 w-full mt-4 text-white p-2 font-bold text-center rounded-2xl">
-                Generate Graph
-            </div> */}
+
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Presets</label>
+                    {_equationsPreset()}
+                </div>
             </div>
-            <div className="border-2 border-gray-400 min-h-96 rounded-2xl flex-3 w-full h-full p-10 flex flex-col">
-                <select
-                    className='border-2 border-gray-400 p-2 rounded-2xl self-start'
-                    onChange={(e) => {
-                        setActiveMode(e.target.value as any);
-                    }}>
-                    <option value={'lines'}>Lines</option>
-                    <option value={'markers'}>Markers</option>
-                </select>
-                <Plot
-                    data={[
-                        {
-                            x,
-                            y,
-                            type: "scatter",
-                            mode: activeMode,
-                            name: `y = ${equation}`,
-                            line: { shape: 'spline' },
-                        },
-                    ]}
-                    layout={{
-                        title: { text: `${equation}` },
-                        xaxis: { title: { text: "x" } },
-                        yaxis: { title: { text: "y" } },
-                        autosize: true,
-                    }}
-                    useResizeHandler={true}
-                    style={{ width: "100%", height: "100%" }}
-                />
+
+            <div className="bg-white border-2 border-gray-100 rounded-3xl flex-2 w-full p-6 shadow-xl flex flex-col">
+                <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold text-gray-800">Visualization</h4>
+                    <select
+                        className='border-2 border-gray-200 p-2 rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-200'
+                        value={activeMode}
+                        onChange={(e) => setActiveMode(e.target.value as any)}
+                    >
+                        <option value='lines'>Smooth Lines</option>
+                        <option value='markers'>Scatter Points</option>
+                    </select>
+                </div>
+
+                <div className="flex-1 min-h-[400px]">
+                    <Plot
+                        data={[
+                            {
+                                x: plotData.x,
+                                y: plotData.y,
+                                type: "scatter",
+                                mode: activeMode,
+                                name: `y = ${equation}`,
+                                line: { shape: 'spline', color: '#2563eb', width: 3 },
+                                marker: { color: '#2563eb', size: 6 }
+                            },
+                        ]}
+                        layout={{
+                            margin: { t: 40, r: 20, l: 40, b: 40 },
+                            xaxis: { title: { text: "x" }, gridcolor: '#f1f5f9' },
+                            yaxis: { title: { text: "y" }, gridcolor: '#f1f5f9' },
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            plot_bgcolor: 'rgba(0,0,0,0)',
+                            autosize: true,
+                            hovermode: 'closest'
+                        }}
+                        useResizeHandler={true}
+                        style={{ width: "100%", height: "100%" }}
+                        config={{ responsive: true, displayModeBar: false }}
+                    />
+                </div>
             </div>
         </div>
-
     )
 }
