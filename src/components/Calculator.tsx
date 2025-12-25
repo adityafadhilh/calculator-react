@@ -70,7 +70,7 @@ export function Calculator() {
             // console.log(response.text);
             // setSolution(response.text || '');
             // console.log(display);
-            const res = await axios.get(import.meta.env.VITE_API_SERVER  + '/solution', {
+            const res = await axios.get(import.meta.env.VITE_API_SERVER + '/solution', {
                 params: {
                     calculation: display
                 }
@@ -132,10 +132,10 @@ export function Calculator() {
                 <div className="w-full text-right color-black rounded-2xl border-gray-400 text-3xl border-2 p-4">
                     {display}
                 </div>
-                <div className='grid grid-cols-4 mt-8 mx-4'>
+                <div className='grid grid-cols-4 mt-8 mx-2'>
                     {buttons.flat().map((btn) => {
                         return (
-                            <div key={btn} onClick={() => handleAddDisplay(btn)} className={`hover:cursor-pointer rounded-2x w-32 mx-1 h-24 text-center font-bold text-2xl p-8 mb-4 mr-4 ${btn === '=' ? 'bg-blue-600 text-white' :
+                            <div key={btn} onClick={() => handleAddDisplay(btn)} className={`hover:cursor-pointer rounded-2xl w-32 h-24 text-center font-bold text-2xl p-8 mb-4 mr-4 ${btn === '=' ? 'bg-blue-600 text-white' :
                                 btn.includes('/') || btn.includes('*') || btn.includes('-') || btn.includes('+') ? 'bg-orange-500 text-white' :
                                     'bg-gray-200 text-black'
                                 }`}>
@@ -144,15 +144,15 @@ export function Calculator() {
                         )
                     })}
                 </div>
-                <div className="flex space-x-4 mb-4">
-                    <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl flex-1 bg-yellow-700 p-4 ml-5 flex items-center justify-center text-white font-bold">{'+/-'}</div>
-                    <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer flex-1 bg-yellow-700 mr-6 text-2xl items-center justify-center flex text-white font-bold">{'('}</div>
-                    <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer flex-1 bg-yellow-700 mr-6 text-2xl items-center justify-center flex text-white font-bold">{')'}</div>
-                    <div onClick={handleBackspace} className="hover:cursor-pointer flex-1 bg-yellow-700 mr-6 text-2xl items-center justify-center flex text-white font-bold">{'%'}</div>
+                <div className="grid grid-cols-4 mb-4 mx-2">
+                    <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl w-32 h-24  bg-yellow-700 p-4 flex items-center justify-center text-white font-bold rounded-2xl">{'+/-'}</div>
+                    <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'('}</div>
+                    <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{')'}</div>
+                    <div onClick={handleBackspace} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'%'}</div>
                 </div>
-                <div className="flex space-x-4">
-                    <div onClick={handleClear} className="hover:cursor-pointer text-2xl flex-1 bg-red-500 p-4 ml-5 flex items-center justify-center text-white">Clear</div>
-                    <div onClick={handleBackspace} className="hover:cursor-pointer flex-1 bg-gray-400 mr-6 text-2xl items-center justify-center flex text-white">{'<-'}</div>
+                <div className="grid grid-cols-2 mx-2 gap-1">
+                    <div onClick={handleClear} className="hover:cursor-pointer h-24 text-2xl bg-red-500 p-4 flex items-center justify-center text-white rounded-2xl">Clear</div>
+                    <div onClick={handleBackspace} className="hover:cursor-pointer h-24 bg-gray-400 text-2xl items-center justify-center flex text-white rounded-2xl">{'<-'}</div>
                 </div>
             </div>
             {isLoading &&
@@ -168,8 +168,8 @@ export function Calculator() {
                     <ReactMarkdown>{solution}</ReactMarkdown>
                 </div>
             }
-            {error && 
-                 <div className="rounded-2xl w-full mt-10 p-10 shadow-gray-400 shadow-2xl inset-shadow-2xs mb-20">
+            {error &&
+                <div className="rounded-2xl w-full mt-10 p-10 shadow-gray-400 shadow-2xl inset-shadow-2xs mb-20">
                     <p className="text-2xl mb-4 text-red-600">Failed to get solution</p>
                 </div>
             }
