@@ -16,13 +16,10 @@ export function Graph() {
         min: -10,
         max: 10
     });
-    const [error, setError] = useState<boolean>(false);
-    const [x, setX] = useState<any>([]);
-    const [y, setY] = useState<any>([]);
     const [activeMode, setActiveMode] = useState<'lines' | 'markers'>('lines');
     const [showPreset, setShowPreset] = useState<boolean>(true);
 
-    const generatePlot = () => {
+    const generatePlot = useMemo(() => {
         try {
             const expression = compile(equation);
 
@@ -36,13 +33,20 @@ export function Graph() {
                 y.push(expression.evaluate({ x: i }));
             };
 
-            setX(x);
-            setY(y);
-            setError(false);
+            return {
+                x,
+                y,
+                error: false
+            };
         } catch (error) {
-            setError(true);
+            // setError(true);
+            return {
+                x: [],
+                y: [],
+                error: true
+            };
         }
-    };
+    }, [range, equation]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -57,9 +61,9 @@ export function Graph() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    useEffect(() => {
-        generatePlot();
-    }, [equation, range, activeMode])
+    // useEffect(() => {
+    //     generatePlot();
+    // }, [equation, range, activeMode])
 
     // useEffect(() => {
     //     generatePlot();
@@ -105,7 +109,7 @@ export function Graph() {
                     }}
                     value={equation}
                 />
-                {error && <span className='text-red-500'>Please input valid equation</span>}
+                {generatePlot.error && <span className='text-red-500'>Please input valid equation</span>}
                 <div className="flex space-x-4 mt-4">
                     <div className="flex-1">
                         <p className="mb-2">{'Min X:'}</p>
@@ -160,8 +164,8 @@ export function Graph() {
                 <Plot
                     data={[
                         {
-                            x,
-                            y,
+                            x: generatePlot?.x,
+                            y: generatePlot?.y,
                             type: "scatter",
                             mode: activeMode,
                             name: `y = ${equation}`,

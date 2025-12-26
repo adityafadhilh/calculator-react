@@ -3,6 +3,8 @@ import { evaluate } from "mathjs";
 import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from 'react-markdown';
 import axios from "axios";
+import ChevronDownIcon from "../assets/icons/ChevronDownIcon";
+import ChevronUpIcon from "../assets/icons/ChevronUpIcon";
 
 export function Calculator() {
     const [display, setDisplay] = useState<string>('0');
@@ -22,6 +24,7 @@ export function Calculator() {
     //     apiKey: API_KEY
     // });
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [showMore, setShowMore] = useState<boolean>(false);
 
     const handleAddNumber = (num: string) => {
         if (display == '0') {
@@ -144,12 +147,40 @@ export function Calculator() {
                         )
                     })}
                 </div>
-                <div className="grid grid-cols-4 mb-4 mx-2">
-                    <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl w-32 h-24  bg-yellow-700 p-4 flex items-center justify-center text-white font-bold rounded-2xl">{'+/-'}</div>
-                    <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'('}</div>
-                    <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{')'}</div>
-                    <div onClick={handleBackspace} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'%'}</div>
+                <div
+                    onClick={() => {
+                        setShowMore(!showMore)
+                    }}
+                    className="flex justify-center">
+                    {showMore ?
+                        <ChevronUpIcon color="gray" className="w-8" />
+                        :
+                        <ChevronDownIcon color="gray" className="w-8" />
+                    }
                 </div>
+                {showMore &&
+                    <>
+                        <div className="grid grid-cols-4 mb-4 mx-2">
+                            <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl w-32 h-24  bg-yellow-700 p-4 flex items-center justify-center text-white font-bold rounded-2xl">{'+/-'}</div>
+                            <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'('}</div>
+                            <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{')'}</div>
+                            <div onClick={handleBackspace} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'%'}</div>
+                        </div>
+                        <div className="grid grid-cols-4 mb-4 mx-2">
+                            <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl w-32 h-24  bg-yellow-700 p-4 flex items-center justify-center text-white font-bold rounded-2xl">{'sin(x)'}</div>
+                            <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'cos(x)'}</div>
+                            <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'tan(x)'}</div>
+                            <div onClick={handleBackspace} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'log(x)'}</div>
+                        </div>
+                        <div className="grid grid-cols-4 mb-4 mx-2">
+                            <div onClick={() => handlePosNeg()} className="hover:cursor-pointer text-2xl w-32 h-24  bg-yellow-700 p-4 flex items-center justify-center text-white font-bold rounded-2xl">{'ln'}</div>
+                            <div onClick={() => handleParantheses('(')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'e'}</div>
+                            <div onClick={() => handleParantheses(')')} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'x^2'}</div>
+                            <div onClick={handleBackspace} className="hover:cursor-pointer w-32 h-24 bg-yellow-700 text-2xl items-center justify-center flex text-white font-bold rounded-2xl">{'x^y'}</div>
+                        </div>
+                    </>
+
+                }
                 <div className="grid grid-cols-2 mx-2 gap-1">
                     <div onClick={handleClear} className="hover:cursor-pointer h-24 text-2xl bg-red-500 p-4 flex items-center justify-center text-white rounded-2xl">Clear</div>
                     <div onClick={handleBackspace} className="hover:cursor-pointer h-24 bg-gray-400 text-2xl items-center justify-center flex text-white rounded-2xl">{'<-'}</div>
